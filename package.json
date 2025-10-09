@@ -1,0 +1,12 @@
+{
+  "name": "harness-ci-lab-app",
+  "version": "1.0.0",
+  "description": "Simple Node.js app for Harness CI lab",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Running test...\" && exit 0"
+  },
+  "author": "Harness Trainer",
+  "license": "ISC"
+}
