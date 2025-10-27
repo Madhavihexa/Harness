@@ -37,7 +37,7 @@ pipeline:
                   identifier: BuildAndPushDockerRegistry_1
                   spec:
                     connectorRef: account.dockerconnector
-                    repo: Harness
+                    repo: harnessdocker/harnessapp
                     tags: <+input>
         failureStrategies:
           - onFailure:
