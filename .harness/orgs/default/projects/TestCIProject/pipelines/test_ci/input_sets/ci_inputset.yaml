@@ -1,0 +1,24 @@
+inputSet:
+  name: ci inputset
+  identifier: ci_inputset
+  orgIdentifier: default
+  projectIdentifier: TestCIProject
+  pipeline:
+    identifier: test_ci
+    properties:
+      ci:
+        codebase:
+          build: <+input>
+    stages:
+      - stage:
+          identifier: build
+          type: CI
+          spec:
+            execution:
+              steps:
+                - step:
+                    identifier: BuildAndPushDockerRegistry_1
+                    type: BuildAndPushDockerRegistry
+                    spec:
+                      tags:
+                        - <+input>
