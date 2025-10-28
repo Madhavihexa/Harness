@@ -1,0 +1,3 @@
+service:
+  name: devservice
+  identifier: devservice
