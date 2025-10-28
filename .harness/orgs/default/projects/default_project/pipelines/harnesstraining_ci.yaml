@@ -43,7 +43,7 @@ pipeline:
                   identifier: Build
                   spec:
                     shell: Sh
-                    command: npm build
+                    command: npm run build
               - step:
                   type: Run
                   name: Unit test
