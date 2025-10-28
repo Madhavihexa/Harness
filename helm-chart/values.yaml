@@ -1,7 +1,7 @@
 
 replicaCount: 1
 image:
-  repository: your-docker-repo/harness-node-app
+  repository: harnessdocker/harnessapp
   tag: latest
   pullPolicy: IfNotPresent
 service:
