@@ -29,7 +29,7 @@ pipeline:
       value: <+input>
     - name: imageTag
       type: String
-      value: "<+pipeline.variables.targetEnv == \"dev\" ? \"devlatest\" : \"qalatest\">"
+      value: "\"<+pipeline.variables.targetEnv == \\\"dev\\\" ? \\\"devlatest\\\" : \\\"qalatest\\\">\""
   stages:
     - stage:
         name: Build Stage
