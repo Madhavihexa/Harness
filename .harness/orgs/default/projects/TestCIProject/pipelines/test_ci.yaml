@@ -27,6 +27,9 @@ pipeline:
       type: Number
       default: 0
       value: <+input>
+    - name: imageTag
+      type: String
+      value: "<+pipeline.variables.targetEnv == \"dev\" ? \"devlatest\" : \"qalatest\">"
   stages:
     - stage:
         name: Build Stage
@@ -95,33 +98,3 @@ pipeline:
                     condition: <+pipeline.variables.targetEnv> == "dev"
                   spec:
                     command: echo "Running dev-specific logic..."
-              - step:
-                  type: Run
-                  name: Run QA-Specific Step
-                  identifier: QAStep
-                  when:
-                    stageStatus: Success
-                    condition: <+pipeline.variables.targetEnv> == "qa"
-                  spec:
-                    command: echo "Running QA-specific logic..."
-              - step:
-                  type: Run
-                  name: Security Scan
-                  identifier: SecurityScan
-                  when:
-                    stageStatus: Success
-                    condition: <+pipeline.variables.runSecurityScan> == "true"
-                  spec:
-                    command: echo "Running security scan..."
-        failureStrategies:
-          - onFailure:
-              errors:
-                - AllErrors
-              action:
-                type: MarkAsFailure
-        variables:
-          - name: imageTag
-            type: String
-            description: ""
-            required: false
-            value: "<+pipeline.variables.targetEnv == \"dev\" ? \"devlatest\" : \"qalatest\">"
