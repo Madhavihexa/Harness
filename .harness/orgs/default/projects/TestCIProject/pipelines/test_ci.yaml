@@ -52,6 +52,30 @@ pipeline:
           execution:
             steps:
               - step:
+                  type: Run
+                  name: Install Dependencies
+                  identifier: npm_install
+                  when:
+                    stageStatus: Success
+                  spec:
+                    command: npm install
+              - step:
+                  type: Run
+                  name: Build Application
+                  identifier: npm_build
+                  when:
+                    stageStatus: Success
+                  spec:
+                    command: npm run build
+              - step:
+                  type: Run
+                  name: Run Tests
+                  identifier: npm_test
+                  when:
+                    stageStatus: Success
+                  spec:
+                    command: npm test
+              - step:
                   type: BuildAndPushDockerRegistry
                   name: Build and Push Image
                   identifier: BuildAndPushDockerRegistry_1
