@@ -98,3 +98,27 @@ pipeline:
                     condition: <+pipeline.variables.targetEnv> == "dev"
                   spec:
                     command: echo "Running dev-specific logic..."
+              - step:
+                  type: Run
+                  name: Run QA-Specific Step
+                  identifier: QAStep
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.targetEnv> == "qa"
+                  spec:
+                    command: echo "Running QA-specific logic..."
+              - step:
+                  type: Run
+                  name: Security Scan
+                  identifier: SecurityScan
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.runSecurityScan> == "true"
+                  spec:
+                    command: echo "Running security scan..."
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: MarkAsFailure
