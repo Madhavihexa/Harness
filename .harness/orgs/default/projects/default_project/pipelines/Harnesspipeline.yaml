@@ -13,16 +13,9 @@ pipeline:
     - stage:
         name: Build
         identifier: Build
-        description: ""
         type: CI
         spec:
           cloneCodebase: true
-          caching:
-            enabled: false
-            override: true
-            paths: []
-          buildIntelligence:
-            enabled: false
           platform:
             os: Linux
             arch: Amd64
@@ -37,27 +30,27 @@ pipeline:
                   identifier: install_dependencies
                   spec:
                     shell: Sh
-                    command: npm install
+                    command: <+input>
               - step:
                   type: Run
                   name: codebuild
                   identifier: codebuild
                   spec:
                     shell: Sh
-                    command: npm run build
+                    command: <+input>
               - step:
                   type: Run
                   name: unittest
                   identifier: unittest
                   spec:
                     shell: Sh
-                    command: npm test
+                    command: <+input>
               - step:
                   type: BuildAndPushDockerRegistry
                   name: BuildAndPushDockerRegistry_1
                   identifier: BuildAndPushDockerRegistry_1
                   spec:
                     connectorRef: dockerconnectorproject
-                    repo: harnessdocker/harnessapp
+                    repo: <+input>
                     tags:
-                      - latest
+                      - <+input>
