@@ -85,7 +85,7 @@ pipeline:
                     connectorRef: account.dockerconnector
                     repo: harnessdocker/harnessapp
                     tags:
-                      - "${{ pipeline.variables.targetEnv == 'dev' ? 'devlatest' : 'qalatest' }}"
+                      - <+pipeline.variables.imageTag>
               - step:
                   type: Run
                   name: Run Dev-Specific Step
@@ -119,3 +119,9 @@ pipeline:
                 - AllErrors
               action:
                 type: MarkAsFailure
+        variables:
+          - name: imageTag
+            type: String
+            description: ""
+            required: false
+            value: "<+pipeline.variables.targetEnv == \"dev\" ? \"devlatest\" : \"qalatest\">"
