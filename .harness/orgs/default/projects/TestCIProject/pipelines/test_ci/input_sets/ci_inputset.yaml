@@ -12,7 +12,7 @@ inputSet:
           build:
             type: branch
             spec:
-              branch: <+input>
+              branch: main
     variables:
       - name: targetEnv
         type: String
