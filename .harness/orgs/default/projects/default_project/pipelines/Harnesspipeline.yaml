@@ -1,0 +1,63 @@
+pipeline:
+  name: Harnesspipeline
+  identifier: Harnesspipeline
+  projectIdentifier: default_project
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: Githubconnectorproject
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: false
+            override: true
+            paths: []
+          buildIntelligence:
+            enabled: false
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: install dependencies
+                  identifier: install_dependencies
+                  spec:
+                    shell: Sh
+                    command: npm install
+              - step:
+                  type: Run
+                  name: codebuild
+                  identifier: codebuild
+                  spec:
+                    shell: Sh
+                    command: npm run build
+              - step:
+                  type: Run
+                  name: unittest
+                  identifier: unittest
+                  spec:
+                    shell: Sh
+                    command: npm test
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: dockerconnectorproject
+                    repo: harnessdocker/harnessapp
+                    tags:
+                      - latest
