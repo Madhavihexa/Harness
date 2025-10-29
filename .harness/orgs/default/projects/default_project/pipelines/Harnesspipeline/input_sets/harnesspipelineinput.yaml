@@ -1,0 +1,38 @@
+inputSet:
+  name: HarnessPipelineInputSet
+  identifier: HarnessPipelineInputSet
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Harnesspipeline
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
+    stages:
+      - stage:
+          identifier: Build
+          spec:
+            execution:
+              steps:
+                - step:
+                    identifier: install_dependencies
+                    spec:
+                      command: npm install
+                - step:
+                    identifier: codebuild
+                    spec:
+                      command: npm run build
+                - step:
+                    identifier: unittest
+                    spec:
+                      command: npm test
+                - step:
+                    identifier: BuildAndPushDockerRegistry_1
+                    spec:
+                      repo: harnessdocker/harnessapp
+                      tags:
+                        - latest
