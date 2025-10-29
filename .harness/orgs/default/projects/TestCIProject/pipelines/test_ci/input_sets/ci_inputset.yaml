@@ -1,5 +1,6 @@
 inputSet:
   name: ci inputset
+  tags: {}
   identifier: ci_inputset
   orgIdentifier: default
   projectIdentifier: TestCIProject
@@ -8,17 +9,24 @@ inputSet:
     properties:
       ci:
         codebase:
-          build: <+input>
-    stages:
-      - stage:
-          identifier: build
-          type: CI
-          spec:
-            execution:
-              steps:
-                - step:
-                    identifier: BuildAndPushDockerRegistry_1
-                    type: BuildAndPushDockerRegistry
-                    spec:
-                      tags:
-                        - <+input>
+          build:
+            type: branch
+            spec:
+              branch: <+input>
+    variables:
+      - name: targetEnv
+        type: String
+        default: dev
+        value: <+input>
+      - name: runSecurityScan
+        type: String
+        default: "false"
+        value: "false"
+      - name: buildNumber
+        type: Number
+        default: 1
+        value: 1
+      - name: retryCount
+        type: Number
+        default: 0
+        value: <+input>
