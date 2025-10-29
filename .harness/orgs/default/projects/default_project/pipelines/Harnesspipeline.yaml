@@ -9,6 +9,7 @@ pipeline:
       codebase:
         connectorRef: Githubconnectorproject
         build: <+input>
+        tag: <+input>
   stages:
     - stage:
         name: Build
