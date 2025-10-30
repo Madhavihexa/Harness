@@ -1,3 +1,36 @@
 service:
   name: sitservice
   identifier: sitservice
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: helmchart
+            type: HelmChart
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.githubconnector
+                  gitFetchType: Branch
+                  folderPath: helm-chart/
+                  repoName: Harness
+                  branch: main
+              subChartPath: ""
+              optionalValuesYaml: false
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+              helmVersion: V3
+              fetchHelmChartMetadata: false
+      artifacts:
+        primary:
+          primaryArtifactRef: artifact
+          sources:
+            - spec:
+                connectorRef: account.dockerconnector
+                imagePath: " harnessdocker/harnessapp"
+                tag: <+input>
+                digest: ""
+              identifier: artifact
+              type: DockerRegistry
+    type: Kubernetes
