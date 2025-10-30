@@ -3,7 +3,6 @@ pipeline:
   identifier: test_ci
   projectIdentifier: TestCIProject
   orgIdentifier: default
-  tags: {}
   properties:
     ci:
       codebase:
@@ -30,15 +29,8 @@ pipeline:
         type: CI
         when:
           pipelineStatus: Success
-          condition: <+pipeline.variables.targetEnv> == "dev" || <+pipeline.variables.targetEnv> == "qa"
         spec:
           cloneCodebase: true
-          caching:
-            enabled: false
-            override: true
-            paths: []
-          buildIntelligence:
-            enabled: false
           platform:
             os: Linux
             arch: Amd64
@@ -82,33 +74,28 @@ pipeline:
                     command: npm test
               - step:
                   type: BuildAndPushDockerRegistry
-                  name: Build and Push Image
-                  identifier: BuildAndPushDockerRegistry_1
-                  when:
-                    stageStatus: Success
-                  spec:
-                    connectorRef: account.dockerconnector
-                    repo: harnessdocker/harnessapp
-                    tags:
-                      - "<+pipeline.variables.targetEnv.trim().toLowerCase() == 'dev' ? 'devlatest' : (pipeline.variables.targetEnv.trim().toLowerCase() == 'qa' ? 'qalatest' : 'latest')>"
-              - step:
-                  type: Run
-                  name: Run Dev-Specific Step
-                  identifier: DevStep
+                  name: Build Dev Image
+                  identifier: BuildDevImage
                   when:
                     stageStatus: Success
                     condition: <+pipeline.variables.targetEnv> == "dev"
                   spec:
-                    command: echo "Running dev-specific logic..."
+                    connectorRef: account.dockerconnector
+                    repo: harnessdocker/harnessapp
+                    tags:
+                      - devlatest
               - step:
-                  type: Run
-                  name: Run QA-Specific Step
-                  identifier: QAStep
+                  type: BuildAndPushDockerRegistry
+                  name: Build QA Image
+                  identifier: BuildQAImage
                   when:
                     stageStatus: Success
                     condition: <+pipeline.variables.targetEnv> == "qa"
                   spec:
-                    command: echo "Running QA-specific logic..."
+                    connectorRef: account.dockerconnector
+                    repo: harnessdocker/harnessapp
+                    tags:
+                      - qalatest
               - step:
                   type: Run
                   name: Security Scan
@@ -118,29 +105,20 @@ pipeline:
                     condition: <+pipeline.variables.runSecurityScan> == "true"
                   spec:
                     command: echo "Running security scan..."
-        failureStrategies:
-          - onFailure:
-              errors:
-                - AllErrors
-              action:
-                type: MarkAsFailure
     - stage:
-        name: approval
+        name: Approval Stage
         identifier: approval
-        description: ""
         type: Approval
         spec:
           execution:
             steps:
               - step:
-                  name: approvalstage
-                  identifier: approvalstage
+                  name: Manual Approval
+                  identifier: approval_step
                   type: HarnessApproval
                   timeout: 1d
                   spec:
-                    approvalMessage: |-
-                      Please review the following information
-                      and approve the pipeline progression
+                    approvalMessage: Please review the build and approve to proceed.
                     includePipelineExecutionHistory: true
                     approvers:
                       minimumCount: 1
@@ -149,10 +127,3 @@ pipeline:
                         - account._account_all_users
                     isAutoRejectEnabled: false
                     approverInputs: []
-        tags: {}
-        failureStrategies:
-          - onFailure:
-              errors:
-                - AllErrors
-              action:
-                type: MarkAsFailure
