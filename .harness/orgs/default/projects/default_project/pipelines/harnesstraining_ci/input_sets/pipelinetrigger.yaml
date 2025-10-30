@@ -1,5 +1,6 @@
 inputSet:
   name: pipelinetrigger
+  tags: {}
   identifier: pipelinetrigger
   orgIdentifier: default
   projectIdentifier: default_project
@@ -11,4 +12,4 @@ inputSet:
           build:
             type: branch
             spec:
-              branch: <+trigger.branch>
+              branch: main
