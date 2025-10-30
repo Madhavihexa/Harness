@@ -3,6 +3,7 @@ inputSet:
   identifier: webhooktrigger
   orgIdentifier: default
   projectIdentifier: Testcdproject
+  tags: {}
   pipeline:
     identifier: test_cd
     stages:
