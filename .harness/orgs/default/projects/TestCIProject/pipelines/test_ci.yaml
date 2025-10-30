@@ -23,9 +23,6 @@ pipeline:
       type: Number
       default: 1
       value: <+input>
-    - name: imageTag
-      type: String
-      value: "<+pipeline.variables.targetEnv.trim().toLowerCase() == 'dev' ? 'devlatest' : (pipeline.variables.targetEnv.trim().toLowerCase() == 'qa' ? 'qalatest' : 'latest')>"
   stages:
     - stage:
         name: Build Stage
@@ -54,10 +51,11 @@ pipeline:
                   type: Run
                   name: Debug Variables
                   identifier: debug_vars
+                  when:
+                    stageStatus: Success
                   spec:
                     command: |
                       echo "Target Env: <+pipeline.variables.targetEnv>"
-                      echo "Resolved Image Tag: <+pipeline.variables.imageTag>"
               - step:
                   type: Run
                   name: Install Dependencies
@@ -92,7 +90,7 @@ pipeline:
                     connectorRef: account.dockerconnector
                     repo: harnessdocker/harnessapp
                     tags:
-                      - <+pipeline.variables.imageTag>
+                      - "<+pipeline.variables.targetEnv.trim().toLowerCase() == 'dev' ? 'devlatest' : (pipeline.variables.targetEnv.trim().toLowerCase() == 'qa' ? 'qalatest' : 'latest')>"
               - step:
                   type: Run
                   name: Run Dev-Specific Step
