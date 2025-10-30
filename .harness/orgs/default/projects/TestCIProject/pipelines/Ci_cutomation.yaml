@@ -1,0 +1,90 @@
+pipeline:
+  name: Ci_cutomation
+  identifier: Ci_cutomation
+  projectIdentifier: TestCIProject
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.githubconnector
+        repoName: Harness
+        build: <+input>
+  stages:
+    - stage:
+        name: build
+        identifier: build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: install dependencies
+                  identifier: install_dependencies
+                  spec:
+                    shell: Sh
+                    command: npm install
+              - step:
+                  type: Run
+                  name: build
+                  identifier: build
+                  spec:
+                    shell: Sh
+                    command: npm run build
+              - step:
+                  type: Run
+                  name: test
+                  identifier: test
+                  spec:
+                    shell: Sh
+                    command: npm test
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: account.dockerconnector
+                    repo: " harnessdocker/harnessapp"
+                    tags:
+                      - latest
+    - stage:
+        name: cd pipeline trigger
+        identifier: cd_pipeline_trigger
+        description: ""
+        type: Custom
+        spec:
+          environment:
+            environmentRef: account.sit_env
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: sit_infra
+          execution:
+            steps:
+              - step:
+                  type: Http
+                  name: Http_1
+                  identifier: Http_1
+                  spec:
+                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/lWu4qpgnS1G4YhvA95Y2og/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=cd_automation&triggerIdentifier=webhook_trigger
+                    method: POST
+                    headers: []
+                    inputVariables: []
+                    outputVariables: []
+                    delegateSelectors:
+                      - helm-delegate
+                  timeout: 10s
+        tags: {}
