@@ -1,0 +1,14 @@
+inputSet:
+  name: pipelinetrigger
+  identifier: pipelinetrigger
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: harnesstraining_ci
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
