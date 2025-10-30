@@ -1,0 +1,104 @@
+pipeline:
+  name: Harness_test_ci_pipeline
+  identifier: Harness_test_ci_pipeline
+  projectIdentifier: TestCIProject
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.githubconnector
+        repoName: Harness
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: install dependencies
+                  identifier: install_dependencies
+                  spec:
+                    shell: Sh
+                    command: npm install
+              - step:
+                  type: Run
+                  name: run build
+                  identifier: run_build
+                  spec:
+                    shell: Sh
+                    command: npm run build
+              - step:
+                  type: Run
+                  name: test
+                  identifier: test
+                  spec:
+                    shell: Sh
+                    command: npm test
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: dev Docker image
+                  identifier: dev_Docker_image
+                  spec:
+                    connectorRef: account.dockerconnector
+                    repo: harnessdocker/harnessapp
+                    tags:
+                      - devimage
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.targetEnv> == "dev"
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: qa Docker image
+                  identifier: qa_Docker_image
+                  spec:
+                    connectorRef: account.dockerconnector
+                    repo: harnessdocker/harnessapp
+                    tags:
+                      - qalatest
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.targetEnv> == "qa"
+              - step:
+                  type: Run
+                  name: scan
+                  identifier: scan
+                  spec:
+                    shell: Sh
+                    command: echo "Running security scan..."
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.runSecurityScan> == "true"
+  variables:
+    - name: targetEnv
+      type: String
+      description: ""
+      required: false
+      value: <+input>
+    - name: runSecurityScan
+      type: String
+      description: ""
+      required: false
+      value: <+input>
+    - name: buildNumber
+      type: String
+      description: ""
+      required: false
+      value: <+input>
