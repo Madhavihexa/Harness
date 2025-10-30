@@ -1,0 +1,4 @@
+environment:
+  name: qa env
+  identifier: qa_env
+  type: PreProduction
