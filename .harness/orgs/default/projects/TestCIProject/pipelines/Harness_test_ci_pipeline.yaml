@@ -126,7 +126,7 @@ pipeline:
                   name: cd pipeline trigger
                   identifier: cd_pipeline_trigger
                   spec:
-                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/t3vaNPomRkWB__Be5PXYXQ/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=test_cd&triggerIdentifier=cd_pipeline_triggerr
+                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/t3vaNPomRkWB__Be5PXYXQ/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=test_cd&triggerIdentifier=cd_pipeline_trigger
                     method: POST
                     headers: []
                     inputVariables: []
