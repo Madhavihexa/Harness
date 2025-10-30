@@ -1,0 +1,4 @@
+environment:
+  name: sit env
+  identifier: sit_env
+  type: PreProduction
