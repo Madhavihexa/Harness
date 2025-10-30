@@ -1,0 +1,24 @@
+inputSet:
+  name: webhooktrigger
+  identifier: webhooktrigger
+  orgIdentifier: default
+  projectIdentifier: Testcdproject
+  pipeline:
+    identifier: test_cd
+    stages:
+      - stage:
+          identifier: deploy
+          type: Deployment
+          spec:
+            service:
+              serviceInputs:
+                serviceDefinition:
+                  type: Kubernetes
+                  spec:
+                    artifacts:
+                      primary:
+                        sources:
+                          - identifier: artifact
+                            type: DockerRegistry
+                            spec:
+                              tag: latest
