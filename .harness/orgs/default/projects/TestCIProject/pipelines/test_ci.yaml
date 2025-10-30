@@ -31,6 +31,12 @@ pipeline:
           pipelineStatus: Success
         spec:
           cloneCodebase: true
+          caching:
+            enabled: false
+            override: true
+            paths: []
+          buildIntelligence:
+            enabled: false
           platform:
             os: Linux
             arch: Amd64
