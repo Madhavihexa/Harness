@@ -23,10 +23,6 @@ pipeline:
       type: Number
       default: 1
       value: <+input>
-    - name: retryCount
-      type: Number
-      default: 0
-      value: <+input>
     - name: imageTag
       type: String
       value: "<+pipeline.variables.targetEnv == \"dev\" ? \"devlatest\" : \"qalatest\">"
