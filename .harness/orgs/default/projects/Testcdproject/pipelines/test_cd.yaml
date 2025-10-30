@@ -11,42 +11,38 @@ pipeline:
         description: ""
         type: Deployment
         spec:
-          deploymentType: NativeHelm
-          service:
-            serviceRef: account.devservice
-            failureStrategies:
-              - onFailure:
-                  errors:
-                    - AllErrors
-                  action:
-                    type: MarkAsFailure
-          environment:
-            environmentRef: account.dev_env
-            deployToAll: false
-            infrastructureDefinitions:
-              - identifier: devinfra
-            failureStrategies:
-              - onFailure:
-                  errors:
-                    - AllErrors
-                  action:
-                    type: MarkAsFailure
+          deploymentType: Kubernetes
           execution:
             steps:
               - step:
-                  name: Helm Deployment
-                  identifier: helmDeployment
-                  type: HelmDeploy
-                  timeout: 10m
+                  type: K8sRollingDeploy
+                  name: K8sRollingDeploy_1
+                  identifier: K8sRollingDeploy_1
                   spec:
                     skipDryRun: false
-            rollbackSteps:
-              - step:
-                  name: Helm Rollback
-                  identifier: helmRollback
-                  type: HelmRollback
+                    pruningEnabled: false
+                    delegateSelectors:
+                      - helm-delegate
                   timeout: 10m
-                  spec: {}
+            rollbackSteps: []
+          service:
+            serviceRef: account.sitservice
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      sources:
+                        - identifier: artifact
+                          type: DockerRegistry
+                          spec:
+                            tag: <+input>
+          environment:
+            environmentRef: account.sit_env
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: sit_infra
         tags: {}
         failureStrategies:
           - onFailure:
