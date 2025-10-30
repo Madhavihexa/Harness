@@ -1,0 +1,58 @@
+pipeline:
+  name: test_cd
+  identifier: test_cd
+  projectIdentifier: Testcdproject
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: deploy
+        identifier: deploy
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: NativeHelm
+          service:
+            serviceRef: account.devservice
+            failureStrategies:
+              - onFailure:
+                  errors:
+                    - AllErrors
+                  action:
+                    type: MarkAsFailure
+          environment:
+            environmentRef: account.dev_env
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: devinfra
+            failureStrategies:
+              - onFailure:
+                  errors:
+                    - AllErrors
+                  action:
+                    type: MarkAsFailure
+          execution:
+            steps:
+              - step:
+                  name: Helm Deployment
+                  identifier: helmDeployment
+                  type: HelmDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Helm Rollback
+                  identifier: helmRollback
+                  type: HelmRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+        delegateSelectors:
+          - helm-delegate
