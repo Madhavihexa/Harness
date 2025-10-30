@@ -25,7 +25,7 @@ pipeline:
       value: <+input>
     - name: imageTag
       type: String
-      value: "<+pipeline.variables.targetEnv == 'dev' ? 'devlatest' : (pipeline.variables.targetEnv == 'qa' ? 'qalatest' : 'latest')>"
+      value: "<+pipeline.variables.targetEnv.trim().toLowerCase() == 'dev' ? 'devlatest' : (pipeline.variables.targetEnv.trim().toLowerCase() == 'qa' ? 'qalatest' : 'latest')>"
   stages:
     - stage:
         name: Build Stage
