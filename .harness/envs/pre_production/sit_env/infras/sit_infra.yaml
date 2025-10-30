@@ -1,0 +1,11 @@
+infrastructureDefinition:
+  name: sit_infra
+  identifier: sit_infra
+  environmentRef: sit_env
+  deploymentType: Kubernetes
+  type: KubernetesDirect
+  spec:
+    connectorRef: account.kubernetesconnector
+    namespace: default
+    releaseName: release-<+INFRA_KEY_SHORT_ID>
+  allowSimultaneousDeployments: false
