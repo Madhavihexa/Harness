@@ -1,0 +1,27 @@
+inputSet:
+  name: ci qa input
+  identifier: ci_qa_input
+  orgIdentifier: default
+  projectIdentifier: TestCIProject
+  pipeline:
+    identifier: test_ci
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
+    variables:
+      - name: targetEnv
+        type: String
+        default: dev
+        value: qa
+      - name: runSecurityScan
+        type: String
+        default: "false"
+        value: "true"
+      - name: buildNumber
+        type: Number
+        default: 1
+        value: 1
