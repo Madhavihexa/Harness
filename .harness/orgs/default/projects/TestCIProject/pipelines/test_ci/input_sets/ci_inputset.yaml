@@ -1,5 +1,5 @@
 inputSet:
-  name: ci inputset
+  name: ci dev inputset
   tags: {}
   identifier: ci_inputset
   orgIdentifier: default
@@ -17,7 +17,7 @@ inputSet:
       - name: targetEnv
         type: String
         default: dev
-        value: <+input>
+        value: dev
       - name: runSecurityScan
         type: String
         default: "false"
@@ -26,7 +26,3 @@ inputSet:
         type: Number
         default: 1
         value: 1
-      - name: retryCount
-        type: Number
-        default: 0
-        value: <+input>
