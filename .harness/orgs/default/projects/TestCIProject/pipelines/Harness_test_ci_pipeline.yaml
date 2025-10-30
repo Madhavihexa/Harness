@@ -1,34 +1,21 @@
 pipeline:
-  name: test_ci
-  identifier: test_ci
+  name: Harness_test_ci_pipeline
+  identifier: Harness_test_ci_pipeline
   projectIdentifier: TestCIProject
   orgIdentifier: default
+  tags: {}
   properties:
     ci:
       codebase:
         connectorRef: account.githubconnector
         repoName: Harness
         build: <+input>
-  variables:
-    - name: targetEnv
-      type: String
-      default: dev
-      value: <+input>
-    - name: runSecurityScan
-      type: String
-      default: "false"
-      value: <+input>
-    - name: buildNumber
-      type: Number
-      default: 1
-      value: <+input>
   stages:
     - stage:
-        name: Build Stage
-        identifier: build
+        name: Build
+        identifier: Build
+        description: ""
         type: CI
-        when:
-          pipelineStatus: Success
         spec:
           cloneCodebase: true
           caching:
@@ -47,84 +34,76 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Debug Variables
-                  identifier: debug_vars
-                  when:
-                    stageStatus: Success
+                  name: install dependencies
+                  identifier: install_dependencies
                   spec:
-                    command: |
-                      echo "Target Env: <+pipeline.variables.targetEnv>"
-              - step:
-                  type: Run
-                  name: Install Dependencies
-                  identifier: npm_install
-                  when:
-                    stageStatus: Success
-                  spec:
+                    shell: Sh
                     command: npm install
               - step:
                   type: Run
-                  name: Build Application
-                  identifier: npm_build
-                  when:
-                    stageStatus: Success
+                  name: run build
+                  identifier: run_build
                   spec:
+                    shell: Sh
                     command: npm run build
               - step:
                   type: Run
-                  name: Run Tests
-                  identifier: npm_test
-                  when:
-                    stageStatus: Success
+                  name: test
+                  identifier: test
                   spec:
+                    shell: Sh
                     command: npm test
               - step:
                   type: BuildAndPushDockerRegistry
-                  name: Build Dev Image
-                  identifier: BuildDevImage
-                  when:
-                    stageStatus: Success
-                    condition: <+pipeline.variables.targetEnv> == "dev"
+                  name: dev Docker image
+                  identifier: dev_Docker_image
                   spec:
                     connectorRef: account.dockerconnector
                     repo: harnessdocker/harnessapp
                     tags:
-                      - devlatest
-              - step:
-                  type: BuildAndPushDockerRegistry
-                  name: Build QA Image
-                  identifier: BuildQAImage
+                      - devimage
                   when:
                     stageStatus: Success
-                    condition: <+pipeline.variables.targetEnv> == "qa"
+                    condition: <+pipeline.variables.targetEnv> == "dev"
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: qa Docker image
+                  identifier: qa_Docker_image
                   spec:
                     connectorRef: account.dockerconnector
                     repo: harnessdocker/harnessapp
                     tags:
                       - qalatest
+                  when:
+                    stageStatus: Success
+                    condition: <+pipeline.variables.targetEnv> == "qa"
               - step:
                   type: Run
-                  name: Security Scan
-                  identifier: SecurityScan
+                  name: scan
+                  identifier: scan
+                  spec:
+                    shell: Sh
+                    command: echo "Running security scan..."
                   when:
                     stageStatus: Success
                     condition: <+pipeline.variables.runSecurityScan> == "true"
-                  spec:
-                    command: echo "Running security scan..."
     - stage:
-        name: Approval Stage
-        identifier: approval
+        name: Approvalstage
+        identifier: Approvalstage
+        description: ""
         type: Approval
         spec:
           execution:
             steps:
               - step:
-                  name: Manual Approval
-                  identifier: approval_step
+                  name: approvalstage
+                  identifier: approvalstage
                   type: HarnessApproval
                   timeout: 1d
                   spec:
-                    approvalMessage: Please review the build and approve to proceed.
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
                     includePipelineExecutionHistory: true
                     approvers:
                       minimumCount: 1
@@ -133,3 +112,20 @@ pipeline:
                         - account._account_all_users
                     isAutoRejectEnabled: false
                     approverInputs: []
+        tags: {}
+  variables:
+    - name: targetEnv
+      type: String
+      description: ""
+      required: false
+      value: <+input>
+    - name: runSecurityScan
+      type: String
+      description: ""
+      required: false
+      value: <+input>
+    - name: buildNumber
+      type: String
+      description: ""
+      required: false
+      value: <+input>

@@ -1,0 +1,16 @@
+inputSet:
+  name: HarnessPipelineInputSet
+  tags: {}
+  identifier: HarnessPipelineInputSet
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Harnesspipeline
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
+          tag: latest

@@ -1,7 +1,6 @@
 inputSet:
-  name: ci dev inputset
-  tags: {}
-  identifier: ci_inputset
+  name: ci qa input
+  identifier: ci_qa_input
   orgIdentifier: default
   projectIdentifier: TestCIProject
   pipeline:
@@ -17,11 +16,11 @@ inputSet:
       - name: targetEnv
         type: String
         default: dev
-        value: dev
+        value: qa
       - name: runSecurityScan
         type: String
         default: "false"
-        value: "false"
+        value: "true"
       - name: buildNumber
         type: Number
         default: 1
