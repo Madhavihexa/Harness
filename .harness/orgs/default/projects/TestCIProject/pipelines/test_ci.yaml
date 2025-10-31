@@ -133,3 +133,25 @@ pipeline:
                         - account._account_all_users
                     isAutoRejectEnabled: false
                     approverInputs: []
+    - stage:
+        name: cdpipelinetrigger
+        identifier: cdpipelinetrigger
+        description: ""
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: Http
+                  name: Cdtrigger
+                  identifier: Cdtrigger
+                  spec:
+                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/-VjJuosJRk2u7nwHJbtMSQ/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=cd_automation&triggerIdentifier=webhooktriggertesting
+                    method: POST
+                    headers: []
+                    inputVariables: []
+                    outputVariables: []
+                    delegateSelectors:
+                      - helm-delegate
+                  timeout: 10s
+        tags: {}
