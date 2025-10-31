@@ -1,5 +1,5 @@
 pipeline:
-  name: Ci_cutomation
+  name: Ci_automation
   identifier: Ci_cutomation
   projectIdentifier: TestCIProject
   orgIdentifier: default
@@ -80,7 +80,7 @@ pipeline:
                   name: Http_1
                   identifier: Http_1
                   spec:
-                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/lWu4qpgnS1G4YhvA95Y2og/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=cd_automation&triggerIdentifier=webhook_trigger
+                    url: https://app.harness.io/gateway/pipeline/api/webhook/custom/-VjJuosJRk2u7nwHJbtMSQ/v3?accountIdentifier=HD-tYLz5Ruq9JxhQNEucpQ&orgIdentifier=default&projectIdentifier=Testcdproject&pipelineIdentifier=cd_automation&triggerIdentifier=webhooktriggertesting
                     method: POST
                     headers: []
                     inputVariables: []
