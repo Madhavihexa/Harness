@@ -1,3 +1,36 @@
 service:
   name: UATservice
   identifier: UATservice
+  serviceDefinition:
+    spec:
+      manifests:
+        - manifest:
+            identifier: uathelmchart
+            type: HelmChart
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.githubconnector
+                  gitFetchType: Branch
+                  folderPath: helm-chart/
+                  repoName: Harness
+                  branch: main
+              subChartPath: ""
+              optionalValuesYaml: false
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+              helmVersion: V3
+              fetchHelmChartMetadata: false
+      artifacts:
+        primary:
+          primaryArtifactRef: uatartifact
+          sources:
+            - spec:
+                connectorRef: account.dockerconnector
+                imagePath: harnessdocker/harnessapp
+                tag: latest
+                digest: ""
+              identifier: uatartifact
+              type: DockerRegistry
+    type: Kubernetes
