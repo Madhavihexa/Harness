@@ -1,0 +1,4 @@
+environment:
+  name: UAT env
+  identifier: UAT_env
+  type: Production
