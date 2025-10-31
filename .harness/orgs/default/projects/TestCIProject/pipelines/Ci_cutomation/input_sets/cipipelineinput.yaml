@@ -1,0 +1,14 @@
+inputSet:
+  name: cipipelineinput
+  identifier: cipipelineinput
+  orgIdentifier: default
+  projectIdentifier: TestCIProject
+  pipeline:
+    identifier: Ci_cutomation
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
