@@ -1,0 +1,24 @@
+inputSet:
+  name: weebhookttriggertestinput
+  identifier: weebhookttriggertestinput
+  orgIdentifier: default
+  projectIdentifier: Testcdproject
+  pipeline:
+    identifier: cd_automation
+    stages:
+      - stage:
+          identifier: deploy
+          type: Deployment
+          spec:
+            service:
+              serviceInputs:
+                serviceDefinition:
+                  type: Kubernetes
+                  spec:
+                    artifacts:
+                      primary:
+                        sources:
+                          - identifier: artifact
+                            type: DockerRegistry
+                            spec:
+                              tag: latest
